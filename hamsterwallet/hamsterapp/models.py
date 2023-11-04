@@ -24,3 +24,4 @@ class transactions(models.Model):
     price = models.IntegerField()
     category = models.ForeignKey(categories, on_delete=models.CASCADE)
     date = models.DateTimeField()
+
