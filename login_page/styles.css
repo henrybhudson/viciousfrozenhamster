@@ -1,0 +1,44 @@
+.1_2 { 
+	overflow:hidden;
+}
+.e1_2 { 
+	background-color:#23222b;
+	width:393px;
+	height:852px;
+	position:absolute;
+}
+.e3_2 { 
+	width:300px;
+	height:291px;
+	position:absolute;
+	left:46px;
+	top:0px;
+	background-image:url(images/hamster_logo_transparent.png);
+	background-repeat:no-repeat;
+	background-size:cover;
+	z-index: 99;
+}
+.e2_2 { 
+	color:white;
+	width:253px;
+	height:48px;
+	position:absolute;
+	left:69px;
+	top:283px;
+	font-family:Red Hat Display;
+	text-align:left;
+	font-size:36px;
+	letter-spacing:0;
+}
+.e2_12 { 
+	color:white;
+	width:137px;
+	height:32px;
+	position:absolute;
+	left:127px;
+	top:251px;
+	font-family:Red Hat Display;
+	text-align:left;
+	font-size:24px;
+	letter-spacing:0;
+}
