@@ -3,10 +3,10 @@ from hamsterapp.models import *
 import datetime
 import re
 
-category_set = set('Bills','Charity','Eating Out','Entertainment',
+category_set = {'Bills','Charity','Eating Out','Entertainment',
                       'Finances','Gegneral','Groceries','Holidays',
                       'Personal Care','Shopping','Transfers','Transport'
-                      )
+}
 
 def index(request):
     return render(request,'mainpage.html')
