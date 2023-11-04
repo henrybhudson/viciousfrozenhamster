@@ -177,7 +177,7 @@ body {
     cursor: pointer;
 }
 
-.input-box>input {
+.input-box > input {
     width: calc(100% - 20px);
 }
 
@@ -202,7 +202,7 @@ input:not(:first-of-type) {
     width: 80%
 }
 
-.register-button {
+.register-button { 
     width: 100%;
     color: white;
     margin-top: 5px;
@@ -211,7 +211,7 @@ input:not(:first-of-type) {
     cursor: pointer;
 }
 
-.register-text {
+.register-text{
     color: white;
     font-size: 18px;
     margin-top: 10px;

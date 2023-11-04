@@ -58,10 +58,18 @@ body {
 
 .hamster {
     position: absolute;
-    bottom: 82px;
-    left: 42px;
-    width: 150px;
-    filter: brightness(1.1);
+    bottom: 92px;
+    left: 60px;
+    width: 120px;
+    filter: brightness(1.35);
+}
+
+@media only screen and (min-width: 550px) {
+    .hamster {
+        bottom: 75px;
+        left: 42px;
+        width: 150px;
+    }
 }
 
 .inner-circle-subtext {
@@ -106,7 +114,7 @@ body {
     display: grid;
     grid-template-columns: 3fr 1fr;
     grid-template-rows: 2fr 1fr 1fr;
-    width: calc(100% - 50px);
+    /* width: calc(100% - 50px); */
     padding: 8px 25px 15px 25px;
     background-color: var(--light-bg);
     margin-top: 10px;
@@ -165,6 +173,126 @@ body {
 }
 
 .highcharts-root {
-    width: 100% !important;
-    height: 400px !important;
+    margin-bottom: -10px;
+}
+
+.modal-content {
+    background-color: var(--mid-bg);
+}
+
+.modal-header,
+.modal-footer {
+    border: none;
+}
+
+.login-title {
+    color: white;
+    font-size: 36px;
+    text-align: center;
+}
+
+.login-text {
+    color: white;
+    font-size: 24px;
+    text-align: center;
+}
+
+.input-box {
+    width: calc(100% - 40px);
+    height: fit-content;
+    background-color: var(--dark-bg);
+    border-radius: 4px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.submit-button {
+    width: 100%;
+    color: white;
+    margin-top: 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.input-box>input {
+    width: calc(100% - 20px);
+}
+
+input {
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--light-bg);
+    outline: none;
+    color: white;
+}
+
+input:not(:first-of-type) {
+    margin-top: 20px;
+}
+
+.input-label {
+    font-weight: 600;
+    padding-bottom: 5px;
+}
+
+.currency-icon {
+    padding: 5px 10px;
+    background-color: var(--dark-bg);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    width: fit-content;
+    color: lightgray;
+}
+
+.cost-input-container {
+    display: flex;
+}
+
+.cost-input {
+    padding: 5px 10px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.login-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%
+}
+
+.register-button {
+    width: 100%;
+    color: white;
+    margin-top: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.register-text {
+    color: white;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background-color: var(--light-bg);
+    border: 1px solid white;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid white !important;
 }
