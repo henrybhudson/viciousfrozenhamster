@@ -15,21 +15,26 @@
 </head>
 
 <body>
-    Text Here
     <div class="login-section">
-        <img src="images/hamster_logo_transparent.png" width="300" height="291">
-        <div class="seperator"></div>
+        <img src="images/hamster_logo_transparent.png" width="200" style="margin-top: 40px; margin-bottom: 15px;">
+        <div class="separator"></div>
         <div class="login-text">Welcome to</div>
         <div class="login-title">HamsterWallet</div>
 
-        <form style="z-index: 99">
-            <label for="email">Email</label>
-            <input type="text" id="email" name="email"><br><br>
-            <label for="password">Password</label>
-            <input type="text" id="password" name="password"><br><br>
-            <input type="submit" value="Submit">
+        
+        <form style="z-index: 99; width: 100%">
+            <div class="input-box">
+                <input type="text" id="email" name="email" placeholder="Email">
+                <input type="text" id="password" name="password" placeholder="Password"><br><br>
+            <div class="submit-button">
+                <input class="w-100" type="submit" value="Login">
+            </div>    
+            </div>
         </form>
     </div>
+    <div class="register-text">Need an account?</div>
+    <form action="../register_page/register_index.html">
+        <input class="register-button" type="submit" value="Register">
 </body>
 
 </html>
