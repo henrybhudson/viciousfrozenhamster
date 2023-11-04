@@ -1,19 +1,65 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from hamsterapp.models import *
 import datetime
-import re
+
 
 category_set = {'Bills','Charity','Eating Out','Entertainment',
                       'Finances','Gegneral','Groceries','Holidays',
                       'Personal Care','Shopping','Transfers','Transport'
 }
 
-def index(request):
-    return render(request,'mainpage.html')
+
+# Log in -> Register, Main
+# Register -> Main
+# Main
+
+def login_page(request):
+    return render(request,'login.html')
+
+def register_page(request):
+    try:
+        email = request.POST["email"]
+        return HttpResponseRedirect(reverse(''))
+    except:
+        return render(request, 'register.html')
+    
+def home_page(request):
+    try:
+        email = request.POST["email"]
+        pw = request.POST["password"]
+        return render(request, 'home.html')
+    except:
+        return HttpResponseRedirect(reverse(''))
+
+
+def process_login_request(request):
+    try:
+        email = request.POST["email"]
+        pw = request.POST["password"]
+        check_login(email,pw)
+        return home_page(request)
+    except:
+        return HttpResponseRedirect(reverse('login'))
+
+def process_register_request(request):
+    try:
+        email = request.POST["email"]
+        pw = request.POST["password"]
+        name = request.POST["name"]
+        budget = int(request.POST["budget"])
+        register(email,pw,name,budget)
+        return home_page(request)
+    except:
+        return HttpResponseRedirect(reverse('registersite'))
+
+
+
 
 def validate_email(email): # -> bool
-    email_pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$)'
-    return re.match(email_pattern, email) is not None
+    if '@' not in email:
+        raise Exception
 
 def validate_text(text, size):
     if type(text)!=str:
@@ -45,7 +91,8 @@ def check_max_price(email, price):
 def check_login(email, pw):
     validate_text(pw,PASSWORD_LENGTH)
     obj = users.objects.get(email=email)
-    return obj.password == pw
+    if obj.password != pw:
+        raise Exception
 
 
 
@@ -54,15 +101,15 @@ def register(email, pw, name, price):
     validate_price(price)
     validate_text(pw, PASSWORD_LENGTH)
     validate_text(name, FIRSTNAME_LENGTH)
-    
-    for em,_,_ in users.objects.all().values():
-        if em == email:
-            raise Exception
+
+
+    if len(users.objects.filter(email=email)) != 0:
+        raise Exception
 
     if price < 0:
         raise Exception
 
-    obj = users(email=email,password=pw, price=price)
+    obj = users(email=email,password=pw, firstName=name, priceLimit=price)
     obj.save()
 
 def change_category_price(category, email, price):
