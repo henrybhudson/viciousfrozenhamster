@@ -6,6 +6,7 @@
 	width:393px;
 	height:852px;
 	position:absolute;
+	z-index: 97;
 }
 .e3_2 { 
 	width:300px;
@@ -16,7 +17,7 @@
 	background-image:url(images/hamster_logo_transparent.png);
 	background-repeat:no-repeat;
 	background-size:cover;
-	z-index: 99;
+	z-index: 98;
 }
 .e2_2 { 
 	color:white;
