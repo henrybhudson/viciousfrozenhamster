@@ -67,6 +67,12 @@ body {
     height: 40%;
 }
 
+.transactions {
+    margin-top: 10px;
+    overflow: scroll !important;
+    height: calc(100% - 20px);
+}
+
 .section-title {
     font-size: 22px;
     font-weight: 700;
@@ -81,17 +87,39 @@ body {
     grid-template-columns: 3fr 1fr;
     grid-template-rows: 2fr 1fr 1fr;
     width: calc(100% - 50px);
-    padding: 15px 25px;
+    padding: 8px 25px 15px 25px;
     background-color: rgb(238, 238, 238);
     margin-top: 10px;
 }
 
+.transaction-block>div {
+    display: flex;
+    align-items: center;
+}
+
 .transaction-date {
     font-size: 12px;
+    margin-top: -15px;
 }
 
 .transaction-value {
     font-weight: 700;
     grid-row: 1 / span 2;
     grid-column: 2;
+    justify-content: end;
+}
+
+.transaction-labels {
+    margin-top: -1px;
+}
+
+.label {
+    padding: 3px 8px;
+    background-color: lightgrey;
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.first-label {
+    margin-left: 0px;
 }
