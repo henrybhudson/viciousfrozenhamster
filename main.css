@@ -12,6 +12,8 @@ body {
     align-items: center;
 }
 
+:root {}
+
 .nav {
     height: 50px;
     width: 100%;
