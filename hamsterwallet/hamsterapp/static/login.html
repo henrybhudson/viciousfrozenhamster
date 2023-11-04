@@ -12,8 +12,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Red+Hat+Display:wght@400;600;700&display=swap"
         rel="stylesheet">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 </head>
 
 <body>
@@ -29,11 +27,7 @@
             <div class="inner-circle-subtext">of £500</div>
         </div>
 
-        <div class="inner-circle-section" style="margin-left: calc((100% - 300px) / 2); width: 300px">
-            <img class="hamster" src="./images/hamster.png">
-        </div>
-        <!-- <canvas class="circle" id="wheel-chart"></canvas> -->
-        <div id="container"></div>
+        <canvas class="circle" id="wheel-chart"></canvas>
     </div>
     <div class="separator"></div>
     <div class="section transactions-section">
@@ -72,7 +66,6 @@
             </div>
         </div>
     </div>
-    <div class="footer"></div>
 </body>
 <script>
     const ctx = document.getElementById('wheel-chart');
@@ -80,6 +73,7 @@
     new Chart(ctx, {
         type: 'doughnut',
         data: {
+            <!-- labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'], -->
             datasets: [{
                 label: '# of Votes',
                 data: [1, 1.5, 2, 3, 4, 5],
@@ -95,36 +89,8 @@
                 borderColor: '#2b2a33',
                 cutout: 150
             }]
-        },
-        options: {
-            tooltips: {
-                callbacks: {
-                    title: function (tooltipItem, data) {
-                        return data['labels'][tooltipItem[0]['index']];
-                    },
-                    label: function (tooltipItem, data) {
-                        return data['datasets'][0]['data'][tooltipItem['index']];
-                    },
-                    afterLabel: function (tooltipItem, data) {
-                        var dataset = data['datasets'][0];
-                        var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
-                        return '(' + percent + '%)';
-                    }
-                },
-                backgroundColor: '#FFF',
-                titleFontSize: 16,
-                titleFontColor: '#0066ff',
-                bodyFontColor: '#000',
-                bodyFontSize: 14,
-                displayColors: false
-            },
-        },
-        <!-- plugins: [ShadowPlugin], -->
+        }
     });
-
-
 </script>
-
-<script src="chart.js"></script>
 
 </html>
