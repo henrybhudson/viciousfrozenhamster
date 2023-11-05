@@ -4,6 +4,12 @@ from django.http import JsonResponse
 from django.urls import reverse
 from hamsterapp.models import *
 import datetime
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.http import JsonResponse
+from django.urls import reverse
+from hamsterapp.models import *
+import datetime
 
 
 
@@ -174,3 +180,17 @@ def get_category_sum(request):
 
     except:
         return JsonResponse({})
+    
+
+# ...
+
+def get_transactions(request):
+    try:
+        email = request.session['email']
+        data = {}
+        for a,b,c,d,e,f in transactions.objects.filter(email=email).values():
+            data[a] = [b,c,d,e,f]
+        return JsonResponse(data)
+    except:
+        data = {}
+        return JsonResponse(data)
