@@ -6,67 +6,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hamster Wallet — Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Red+Hat+Display:wght@400;600;700&display=swap"
         rel="stylesheet">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 </head>
-
 <body>
     <div class="nav">
 
     </div>
-
-
     <div class="circle-section">
         <div class="inner-circle-section">
             <div class="inner-circle-subtext">You've Spent</div>
-            <div class="inner-circle-value">£370.54</div>
-            <div class="inner-circle-subtext">of £500</div>
+            <div class="inner-circle-value">£<span class="spend">370.54</span></div>
+            <div class="inner-circle-subtext">of £<span class="budget">500</span></div>
         </div>
 
-        <canvas class="circle" id="wheel-chart"></canvas>
-    </div>
-    <div class="separator"></div>
-    <div class="section transactions-section">
-        <div class="section-title">
-            My Transactions
-            <div class="view-btn">View All</div>
+        <div class="inner-circle-section" style="margin-left: calc((100% - 300px) / 2); width: 300px">
+            <img class="hamster" src="../static/images/hamster.png">
         </div>
-        <div class="transactions">
-            <div class="transaction-block">
-                <div class="transaction-title">TESCO PLC</div>
-                <div class="transaction-date">4th November 2023</div>
-                <div class="transaction-value">£14.55</div>
-                <div class="transaction-labels">
-                    <div class="first-label label">Groceries</div>
-                    <div class="label">Essentials</div>
-                </div>
+            <div id="container"></div>
+        </div>
+        <div class="separator"></div>
+        <div class="section transactions-section">
+            <div class="section-title">
+                My Transactions
+                <div class="add-btn" data-toggle="modal" data-target="#transactionModalCenter">Add New</div>
             </div>
-            <div class="transaction-block">
-                <div class="transaction-title">TESCO PLC</div>
-                <div class="transaction-date">4th November 2023</div>
-                <div class="transaction-value">£14.55</div>
-                <div class="transaction-labels">
-                    <div class="first-label label">Groceries</div>
-                    <div class="label">Essentials</div>
-                    <div class="label">Shopping</div>
-                </div>
-            </div>
-            <div class="transaction-block">
-                <div class="transaction-title">TESCO PLC</div>
-                <div class="transaction-date">4th November 2023</div>
-                <div class="transaction-value">£14.55</div>
-                <div class="transaction-labels">
-                    <div class="first-label label">Groceries</div>
-                    <div class="label">Essentials</div>
-                </div>
+            <div class="transactions">
             </div>
         </div>
-    </div>
+        <div class="footer"></div>
+
+        <!-- MODAL -->
+
+        <div class="modal fade" id="transactionModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="transactionModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="transactionModalLongTitle"><b>Add Transaction</b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="color: white">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-label">Transaction Title</div>
+                        <input type="text" placeholder="E.g. 'Tesco'" name="description" id="description">
+                        <br /><br />
+                        <div class="input-label">Cost of Transaction</div>
+                        <div class="cost-input-container">
+                            <div class="currency-icon">£</div>
+                            <input class="cost-input" type="text" placeholder="0.00" name="description"
+                                id="description">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 <script>
     const ctx = document.getElementById('wheel-chart');
@@ -90,5 +98,133 @@
         }
     });
 </script>
+<script>
+    let ts = '{{ transactions }}';
+    ts = ts.replaceAll('&#x27;', '"')
+    const t_data = JSON.parse(ts).reverse();
+    let total_spend = 0;
+
+    const TRANSACTIONS_LIST = document.querySelector('.transactions');
+    const SPEND = document.querySelector('.spend');
+    
+    t_data.forEach((t) => {
+        let block = document.createElement('div');
+        block.classList += "transaction-block";
+        let inner_html = `<div class="transaction-title">${t["transactionName"]}</div>
+        <div class="transaction-date">${t["date"]}</div>
+        <div class="transaction-value">£${t["price"]}</div>
+        <div class="transaction-labels">
+            <div class="first-label label">${t["category"]}</div>
+        </div>
+        <div class="delete-btn">Delete</div>
+        `;
+        block.innerHTML = inner_html;
+        TRANSACTIONS_LIST.appendChild(block);
+
+        total_spend += parseFloat(t["price"]);
+    });
+    
+    SPEND.textContent = `${total_spend.toFixed(2)}`;
+
+
+    // Create the chart
+    const COLOURS = {
+        "Bills": "#10451D",
+        "Charity": "#155D27",
+        "Food": "#1A7431",
+        "Entertainment": "#208B3A",
+        "Finances": "#25A244",
+        "General": "#2DC653",
+        "Groceries": "#4AD66D",
+        "Holidays": "#6EDE8A",
+        "Personal Care": "#92E6A7",
+        "Shopping": "#B7EFC5",
+        "Bank Transfers": "#C9F2D3",
+        "Transport": "#E8FFEE"
+    }
+
+    const CATEGORIES = ["Bills", "Charity", "Food", "Entertainment", "Finances", "General", "Groceries", "Holidays", "Personal Care", "Shopping", "Bank Transfers", "Transport"];
+
+
+    const createData = (transactions) => {
+        let values = {};
+        let res = [];
+        CATEGORIES.forEach((category) => {
+            values[category] = 0
+        });
+
+        transactions.forEach((transaction) => {
+            values[transaction["category"]] += parseFloat(transaction["price"]);
+        });
+
+        for (const [category, value] of Object.entries(values)) {
+            res.push([category, value]);
+        }
+
+        return res;
+    };
+
+    const f = () => {
+        const CIRCLE_SIZE = (window.innerWidth < 500) ? "120%" : "100%";
+
+        Highcharts.chart('container', {
+            chart: {
+                renderTo: 'container',
+                type: 'pie',
+                backgroundColor: 'transparent',
+            },
+            plotOptions: {
+                pie: {
+                    shadow: false,
+                    borderWidth: 15,
+                    borderColor: '#2b2a33'
+                },
+                
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.point.name + '</b>: ' + '£' + this.y;
+                }
+            },
+            series: [{
+                name: 'Expenses',
+                data: createData(t_data),
+                size: CIRCLE_SIZE,
+                innerSize: '80%',
+                dataLabels: {
+                    enabled: false
+                }
+            }],
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: ""
+            }
+        });
+    }
+
+    f();
+</script>
+
+
+
+<script src="../static/chart.js"></script>
+
+<script>
+    const CIRCLE = document.querySelector('.highcharts-root');
+    CIRCLE.style.width = `${window.innerWidth}px`;
+    CIRCLE.setAttribute('viewBox', `0 0 ${Math.max(600, window.innerWidth)} 400`);
+</script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
 
 </html>

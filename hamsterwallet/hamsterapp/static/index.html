@@ -19,22 +19,9 @@
 </head>
 
 <body>
-    <div class="slidecontainer">
-        <input type="range" min="20" max="500" value="50" class="slider" id="myRange">
-        <p>Budget: <span id="demo"></span></p>
+    <div class="nav">
+
     </div>
-
-    <script>
-        var slider = document.getElementById("myRange");
-        var output = document.getElementById("demo");
-        output.innerHTML = "£"+slider.value; // Display the default slider value
-
-        // Update the current slider value (each time you drag the slider handle)
-        slider.oninput = function() {
-        output.innerHTML = "£"+this.value;
-        }
-    </script>
-
     <div class="circle-section">
         <div class="inner-circle-section">
             <div class="inner-circle-subtext">You've Spent</div>
@@ -43,81 +30,80 @@
         </div>
 
         <div class="inner-circle-section" style="margin-left: calc((100% - 300px) / 2); width: 300px">
-            <img class="hamster" src="./images/hamster.png"">
+            <img class="hamster" src="./images/hamster.png">
         </div>
         <!-- <canvas class=" circle" id="wheel-chart"></canvas> -->
-            <div id="container"></div>
+        <div id="container"></div>
+    </div>
+    <div class="separator"></div>
+    <div class="section transactions-section">
+        <div class="section-title">
+            My Transactions
+            <div class="add-btn" data-toggle="modal" data-target="#transactionModalCenter">Add New</div>
         </div>
-        <div class="separator"></div>
-        <div class="section transactions-section">
-            <div class="section-title">
-                My Transactions
-                <div class="add-btn" data-toggle="modal" data-target="#transactionModalCenter">Add New</div>
+        <div class="transactions">
+            <div class="transaction-block">
+                <div class="transaction-title">TESCO PLC</div>
+                <div class="transaction-date">4th November 2023</div>
+                <div class="transaction-value">£14.55</div>
+                <div class="transaction-labels">
+                    <div class="first-label label">Groceries</div>
+                    <div class="label">Essentials</div>
+                </div>
+                <div class="delete-btn">Delete</div>
             </div>
-            <div class="transactions">
-                <div class="transaction-block">
-                    <div class="transaction-title">TESCO PLC</div>
-                    <div class="transaction-date">4th November 2023</div>
-                    <div class="transaction-value">£14.55</div>
-                    <div class="transaction-labels">
-                        <div class="first-label label">Groceries</div>
-                        <div class="label">Essentials</div>
-                    </div>
-                    <div class="delete-btn">Delete</div>
-                </div>
-                <div class="transaction-block">
-                    <div class="transaction-title">TESCO PLC</div>
-                    <div class="transaction-date">4th November 2023</div>
-                    <div class="transaction-value">£14.55</div>
-                    <div class="transaction-labels">
-                        <div class="first-label label">Groceries</div>
-                        <div class="label">Essentials</div>
-                        <div class="label">Shopping</div>
-                    </div>
-                </div>
-                <div class="transaction-block">
-                    <div class="transaction-title">TESCO PLC</div>
-                    <div class="transaction-date">4th November 2023</div>
-                    <div class="transaction-value">£14.55</div>
-                    <div class="transaction-labels">
-                        <div class="first-label label">Groceries</div>
-                        <div class="label">Essentials</div>
-                    </div>
+            <div class="transaction-block">
+                <div class="transaction-title">TESCO PLC</div>
+                <div class="transaction-date">4th November 2023</div>
+                <div class="transaction-value">£14.55</div>
+                <div class="transaction-labels">
+                    <div class="first-label label">Groceries</div>
+                    <div class="label">Essentials</div>
+                    <div class="label">Shopping</div>
                 </div>
             </div>
+            <div class="transaction-block">
+                <div class="transaction-title">TESCO PLC</div>
+                <div class="transaction-date">4th November 2023</div>
+                <div class="transaction-value">£14.55</div>
+                <div class="transaction-labels">
+                    <div class="first-label label">Groceries</div>
+                    <div class="label">Essentials</div>
+                </div>
+            </div>
         </div>
-        <div class="footer"></div>
+    </div>
+    <div class="footer"></div>
 
-        <!-- MODAL -->
+    <!-- MODAL -->
 
-        <div class="modal fade" id="transactionModalCenter" tabindex="-1" role="dialog"
-            aria-labelledby="transactionModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="transactionModalLongTitle"><b>Add Transaction</b></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true" style="color: white">&times;</span>
-                        </button>
+    <div class="modal fade" id="transactionModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="transactionModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transactionModalLongTitle"><b>Add Transaction</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: white">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-label">Transaction Title</div>
+                    <input type="text" placeholder="E.g. 'Tesco'" name="description" id="description">
+                    <br /><br />
+                    <div class="input-label">Cost of Transaction</div>
+                    <div class="cost-input-container">
+                        <div class="currency-icon">£</div>
+                        <input class="cost-input" type="text" placeholder="0.00" name="description" id="description">
                     </div>
-                    <div class="modal-body">
-                        <div class="input-label">Transaction Title</div>
-                        <input type="text" placeholder="E.g. 'Tesco'" name="description" id="description">
-                        <br /><br />
-                        <div class="input-label">Cost of Transaction</div>
-                        <div class="cost-input-container">
-                            <div class="currency-icon">£</div>
-                            <input class="cost-input" type="text" placeholder="0.00" name="description"
-                                id="description">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </div>
             </div>
         </div>
+    </div>
 </body>
 <script>
     const ctx = document.getElementById('wheel-chart');
@@ -176,10 +162,6 @@
     const CIRCLE = document.querySelector('.highcharts-root');
     CIRCLE.style.width = `${window.innerWidth}px`;
     CIRCLE.setAttribute('viewBox', `0 0 ${Math.max(600, window.innerWidth)} 400`);
-
-    $(document).ready(function () {
-        $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-    });
 </script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

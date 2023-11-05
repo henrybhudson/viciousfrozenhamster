@@ -37,6 +37,7 @@ def home_page(request):
         # email = request.POST["email"]
         # pw = request.POST["password"]
         c = get_transactions(request)
+        print(c)
         return render(request, 'home.html', c)
     except:
         return HttpResponseRedirect(reverse(''))
@@ -160,6 +161,7 @@ def sum_category(email, category):
     s = 0
     for i in transactions.objects.filter(email=email,category=category):
         s += i.price
+        
 def category_entries(email, category):
     return [i.values() for i in transactions.objects.filter(email=email,category=category)]
 
@@ -177,14 +179,15 @@ def add_transaction(request):
 def get_transactions(request):
     try:
         email = request.POST["email"]
-        print(transactions.objects.filter(email=email))
-        # data = {}
-        # for a,b,c,d,e,f in transactions.objects.filter(email=email).values():
-        #     data[a] = [b,c,d,e,f]
-        return True
+        data = {}
+        ts = []
+        for t in transactions.objects.filter(email=email).values():
+            ts.append(t)
+        data["transactions"] = ts
+        return data
     except:
         data = {}
-        return JsonResponse(data)
+        return data
     
 def get_category_sum(request):
     try:
