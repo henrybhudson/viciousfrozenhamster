@@ -176,6 +176,13 @@
         return res;
     };
 
+    const getRequiredColours = (transactions) => {
+        let cols = [];
+        transactions.forEach((transaction) => {
+            values[transaction["category"]] += parseFloat(transaction["price"]);
+        });
+    }
+
     const f = () => {
         const CIRCLE_SIZE = (window.innerWidth < 500) ? "120%" : "100%";
 
@@ -189,7 +196,10 @@
                 pie: {
                     shadow: false,
                     borderWidth: 15,
-                    borderColor: '#2b2a33'
+                    borderColor: '#2b2a33',
+                    colors: [
+                        getRequiredColours(t_data)
+                    ],
                 },
                 
             },
@@ -213,10 +223,6 @@
             title: {
                 text: ""
             }
-        });
-
-        Highcharts.setOptions({
-            colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
         });
     }
 
