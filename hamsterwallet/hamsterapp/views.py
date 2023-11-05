@@ -63,19 +63,23 @@ def process_register_request(request):
 def validate_email(email): # -> bool
     if '@' not in email:
         raise Exception
+    
 def validate_text(text, size):
     if type(text)!=str:
         raise Exception
     if not (1 <= len(text) <= size):
         raise Exception
+    
 def validate_price(price):
     if type(price)!=float:
         raise Exception
+    
 def validate_category(name): # -> bool
     if type(name) != str:
         raise Exception
     if name not in category_set:
         raise Exception
+    
 def check_max_price(email, price):
     validate_email(email)
     validate_price(price)
@@ -202,3 +206,6 @@ def get_transactions(request):
     except:
         data = {}
         return JsonResponse(data)
+
+def meow():
+    print("meow")
