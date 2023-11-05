@@ -7,3 +7,8 @@ Named HamsterWallet after the randomly generated team name we were given. The ap
 The app also features a login and registration system which communicates with a database to allow the user to login in and register. 
 
 If we were to continue with this, we would like the user to link their bank transactions and automatically categorise these transactions so that the user wouldn't have to enter these manually.
+
+## Usage
+Use the demo account `demo@durhack.com` with password `demo` or create your own.
+
+To run the code, navigate to `hamsterwallet/` and run `python manage.py runserver`.
