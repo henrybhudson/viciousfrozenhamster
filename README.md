@@ -17,4 +17,4 @@ To run the code, navigate to `hamsterwallet/` and run `python manage.py runserve
 
 **Please contact us if you require one of our devices to run the code**.
 
-We weren't sure how to hide the API Key for OpenAI. Please let us know if you can't add transactions (this'll be due to the key).
+We weren't sure how to hide the API Key for OpenAI. Please let us know if you can't add transactions (this'll be due to the key). We stored it in a `.env` file and added that in the `.gitignore` file.
