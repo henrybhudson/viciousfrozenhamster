@@ -28,12 +28,11 @@
             {% csrf_token %}
             <div class="input-box">
                 <input type="text" id="email" name="email" placeholder="Email">
-                <input type="text" id="password" name="password" placeholder="Password"><br><br>
+                <input type="password" id="password" name="password" placeholder="Password"><br><br>
                 <input type="text" id="name" name="name" placeholder="Name">
-                <input type="text" id="budget" name="budget" placeholder="Budget">
                 
             <div class="submit-button">
-                <input class="w-100" type="submit" value="Register">
+                <input class="w-100 register-btn" type="submit" value="Register">
             </div>    
             </div>
         </form>
@@ -44,5 +43,31 @@
         
         <input class="register-button" type="submit" value="Login">
 </body>
+<script>
+    {% comment %} document.querySelector('.register-btn').addEventListener('click', () => {
 
+        fetch('/../signup/', {
+            method: 'POST',
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Accept": "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: document.querySelector('#name').value,
+                email: document.querySelector('#email').value,
+                password: document.querySelector('#password').value
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setTimeout(() => {
+                location.reload();
+            }, 200)
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }) {% endcomment %}
+</script>
 </html>

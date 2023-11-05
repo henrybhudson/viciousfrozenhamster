@@ -22,7 +22,7 @@
 <body>
     <div class="slidecontainer">
         <input type="range" min="20" max="500" value={{priceLimit}} class="slider" id="range">
-        <p>Budget: <span id="budget-value"></span></p>
+        <p>Weekly Budget: <span id="budget-value"></span></p>
     </div>
 
     <script>
@@ -54,6 +54,8 @@
                 <div class="add-btn" data-toggle="modal" data-target="#transactionModalCenter">Add New</div>
             </div>
             <div class="transactions">
+                <br/>
+                No transactions yet!
             </div>
         </div>
         <div class="footer"></div>
@@ -127,6 +129,10 @@
 
     const TRANSACTIONS_LIST = document.querySelector('.transactions');
     const SPEND = document.querySelector('.spend');
+
+    if(t_data.length > 0) {
+        TRANSACTIONS_LIST.innerHTML = "";
+    }
     
     t_data.forEach((t) => {
         let block = document.createElement('div');
@@ -389,9 +395,7 @@
  
 {% comment %} 
 
-Red alert when spent > budget
 Empty message when no transactions
-Add 'weekly' wording
 
 {% endcomment %}
 

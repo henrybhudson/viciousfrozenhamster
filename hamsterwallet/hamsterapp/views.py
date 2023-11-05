@@ -65,7 +65,7 @@ def process_register_request(request):
         email = request.POST["email"]
         pw = request.POST["password"]
         name = request.POST["name"]
-        budget = float(request.POST["budget"])
+        budget = 100
         register(email,pw,name,budget)
         return home_page(request)
     except:
@@ -112,18 +112,14 @@ def check_login(email, pw):
 #Database functions
 def register(email, pw, name, price):
     validate_email(email)
-    validate_price(price)
-    validate_text(pw, PASSWORD_LENGTH)
-    validate_text(name, FIRSTNAME_LENGTH)
-
 
     if len(users.objects.filter(email=email)) != 0:
         raise Exception
 
-    if price < 0:
+    if float(price) < 0:
         raise Exception
 
-    obj = users(email=email,password=hash(pw), firstName=name)
+    obj = users(email=email,password=hash(pw), firstName=name, priceLimit=100)
     obj.save()
 
 # def change_category_price(category, email, price):
