@@ -11,7 +11,7 @@ If we were to continue with this, we would like the user to link their bank tran
 ## Usage
 > :warning: **Please use a mobile browser. This is only intended for mobile use** You can also use the responsive mode in developer tools on desktop.
 
-Use the demo account `demo@durhack.com` with password `demo` or create your own.
+Use the demo account `demo@durhack.com` with password `demo123` or create your own.
 
 To run the code, navigate to `hamsterwallet/` and run `python manage.py runserver`. You may need Django, OpenAI and Python downloaded.
 
