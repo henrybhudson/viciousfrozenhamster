@@ -208,5 +208,13 @@ def get_transactions(request):
         data = {}
         return JsonResponse(data)
 
+import random
+import random
 def meow():
-    print("meow")
+    cat_sounds = ["meow", "purr", "hiss", "yowl", "growl"]
+    print(random.choice(cat_sounds))
+
+#def bark():
+    dog_sounds = ["woof", "bark", "growl", "howl", "whimper"]
+    print(random.choice(dog_sounds))
+
