@@ -19,9 +19,21 @@
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 </head>
 <body>
-    <div class="nav">
-
+    <div class="slidecontainer">
+        <input type="range" min="20" max="500" value="50" class="slider" id="myRange">
+        <p>Budget: <span id="demo"></span></p>
     </div>
+
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = "£"+slider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        slider.oninput = function() {
+        output.innerHTML = "£"+this.value;
+        }
+    </script>
     <div class="circle-section">
         <div class="inner-circle-section">
             <div class="inner-circle-subtext">You've Spent</div>
@@ -202,7 +214,12 @@
                 text: ""
             }
         });
+
+        Highcharts.setOptions({
+            colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+        });
     }
+
 
     f();
 </script>
