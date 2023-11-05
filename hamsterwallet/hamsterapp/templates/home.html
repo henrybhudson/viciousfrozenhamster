@@ -118,7 +118,7 @@
         }
     });
 </script>
-<script type="module">
+<script>
     let ts = '{{ transactions }}';
     ts = ts.replaceAll('&#x27;', '"')
     const t_data = JSON.parse(ts).reverse();
@@ -231,18 +231,45 @@
         let available = (current_budget - total_spend);
 
         if(available < 0){
-            // do something
             available = 0;
         } 
 
         let circle_data = createData(t_data, available);
         let circle_colours = getRequiredColours(t_data, available);
 
-        setupChart(circle_data, circle_colours);
+        setupChart(circle_data, circle_colours, available);
     }
 
-    const setupChart = (data, colours) => {
+    const delete_transaction = (id) => {
+        fetch('/../del-transaction/', {
+            method: 'POST',
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Accept": "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    const setupChart = (data, colours, available) => {
         const CIRCLE_SIZE = (window.innerWidth < 500) ? "120%" : "100%";
+
+        let borderColour = '#2b2a33';
+        if(available == 0) {
+            borderColour = '#572A2E';
+        }
         
         Highcharts.setOptions({
             colors: colours
@@ -256,7 +283,7 @@
             plotOptions: {
                 pie: {
                     borderWidth: 15,
-                    borderColor: '#2b2a33'
+                    borderColor: borderColour
                 },
                 
             },
@@ -330,31 +357,8 @@
         });
     });
 
-    const delete_transaction = (id) => {
-        fetch('/../del-transaction/', {
-            method: 'POST',
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken"),
-                "Accept": "application/json",
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: id
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            setTimeout(() => {
-                location.reload();
-            }, 500);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
     document.querySelector('#range').addEventListener('touchend', () => {
-        new_budget = document.querySelector('#range').value;
+        let new_budget = document.querySelector('#range').value;
         document.querySelector('.budget').textContent = new_budget;
         current_budget = new_budget;
 
@@ -386,7 +390,6 @@
 {% comment %} 
 
 Red alert when spent > budget
-Navbar fix
 Empty message when no transactions
 Add 'weekly' wording
 
