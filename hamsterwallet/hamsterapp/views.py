@@ -10,7 +10,10 @@ from django.http import JsonResponse
 from django.urls import reverse
 from hamsterapp.models import *
 import datetime
+import hashlib
 
+def hash():
+    return hashlib.sha256(str.encode())
 
 
 category_set = {'Bills','Charity','Eating Out','Entertainment',
@@ -86,7 +89,7 @@ def check_max_price(email, price):
 def check_login(email, pw):
     validate_text(pw,PASSWORD_LENGTH)
     obj = users.objects.get(email=email)
-    if obj.password != pw:
+    if obj.password != hash(pw):
         raise Exception
 
 #Database functions
@@ -103,7 +106,7 @@ def register(email, pw, name, price):
     if price < 0:
         raise Exception
 
-    obj = users(email=email,password=pw, firstName=name, priceLimit=price)
+    obj = users(email=email,password=hash(pw), firstName=name, priceLimit=price)
     obj.save()
 def change_category_price(category, email, price):
     validate_category(category)
@@ -119,14 +122,16 @@ def change_category_price(category, email, price):
     obj = categories.objects.get(category=category, email=email)
     obj.priceLimit = price
     obj.save()
-def update_details(email, password, firstname, price):
-    obj = users.objects.get(email=email)
-    check_max_price(email, price)
-    validate_text(firstname,)
-    obj.priceLimit = price
-    obj.password = password
-    obj.firstName = firstname
-    obj.save()
+
+# def update_details(email, password, firstname, price):
+#     obj = users.objects.get(email=email)
+#     check_max_price(email, price)
+#     validate_text(firstname,)
+#     obj.priceLimit = price
+#     obj.password = password
+#     obj.firstName = firstname
+#     obj.save()
+
 def add_transaction(email, transaction_name, price, category):
     validate_text(transaction_name,TRANSACTION_LENGTH)
     validate_price(price)
@@ -134,7 +139,8 @@ def add_transaction(email, transaction_name, price, category):
 
     time = datetime.datetime.now().astimezone()
     obj = transactions(email, transaction_name, price, category, time)
-    obj.save()    
+    obj.save()   
+
 def remove_transaction(transaction_ID):
     obj = transactions.objects.get(id=transaction_ID)
     obj.delete()
@@ -159,6 +165,7 @@ def add_transaction(request):
         add_transaction(email, itemName, price, category)
     except:
         pass
+
 def get_transactions(request):
     try:
         email = request.POST["email"]
@@ -169,6 +176,7 @@ def get_transactions(request):
     except:
         data = {}
         return JsonResponse(data)
+    
 def get_category_sum(request):
     try:
         email = request.POST["email"]
