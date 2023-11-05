@@ -36,7 +36,8 @@ def home_page(request):
     try:
         # email = request.POST["email"]
         # pw = request.POST["password"]
-        return render(request, 'home.html')
+        c = get_transactions(request)
+        return render(request, 'home.html', c)
     except:
         return HttpResponseRedirect(reverse(''))
 
@@ -176,10 +177,11 @@ def add_transaction(request):
 def get_transactions(request):
     try:
         email = request.POST["email"]
-        data = {}
-        for a,b,c,d,e,f in transactions.objects.filter(email=email).values():
-            data[a] = [b,c,d,e,f]
-        return JsonResponse(data)
+        print(transactions.objects.filter(email=email))
+        # data = {}
+        # for a,b,c,d,e,f in transactions.objects.filter(email=email).values():
+        #     data[a] = [b,c,d,e,f]
+        return True
     except:
         data = {}
         return JsonResponse(data)
@@ -196,17 +198,6 @@ def get_category_sum(request):
     except:
         return JsonResponse({})
     
-
-def get_transactions(request):
-    try:
-        email = request.session['email']
-        data = {}
-        for a,b,c,d,e,f in transactions.objects.filter(email=email).values():
-            data[a] = [b,c,d,e,f]
-        return JsonResponse(data)
-    except:
-        data = {}
-        return JsonResponse(data)
 
 def meow():
     print("meow")
