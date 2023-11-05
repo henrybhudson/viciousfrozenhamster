@@ -12,8 +12,8 @@ from hamsterapp.models import *
 import datetime
 import hashlib
 
-def hash():
-    return hashlib.sha256(str.encode())
+def hash(pw):
+    return hashlib.sha256(pw.encode()).hexdigest()
 
 
 category_set = {'Bills','Charity','Eating Out','Entertainment',
@@ -31,10 +31,11 @@ def register_page(request):
         return HttpResponseRedirect(reverse(''))
     except:
         return render(request, 'register.html')
+    
 def home_page(request):
     try:
-        email = request.POST["email"]
-        pw = request.POST["password"]
+        # email = request.POST["email"]
+        # pw = request.POST["password"]
         return render(request, 'home.html')
     except:
         return HttpResponseRedirect(reverse(''))
@@ -44,10 +45,11 @@ def process_login_request(request):
     try:
         email = request.POST["email"]
         pw = request.POST["password"]
-        check_login(email,pw)
+        check_login(email, pw)
         return home_page(request)
     except:
         return HttpResponseRedirect(reverse('login'))
+    
 def process_register_request(request):
     try:
         email = request.POST["email"]
@@ -90,6 +92,7 @@ def check_max_price(email, price):
 
     if price < price_sum or price < 0:
         raise Exception
+    
 def check_login(email, pw):
     validate_text(pw,PASSWORD_LENGTH)
     obj = users.objects.get(email=email)
@@ -193,8 +196,6 @@ def get_category_sum(request):
     except:
         return JsonResponse({})
     
-
-# ...
 
 def get_transactions(request):
     try:

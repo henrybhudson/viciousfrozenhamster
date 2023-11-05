@@ -39,7 +39,7 @@
         <div class="section transactions-section">
             <div class="section-title">
                 My Transactions
-                <div class="view-btn">View All</div>
+                <div class="add-btn" data-toggle="modal" data-target="#transactionModalCenter">Add New</div>
             </div>
             <div class="transactions">
                 <div class="transaction-block">
@@ -50,6 +50,7 @@
                         <div class="first-label label">Groceries</div>
                         <div class="label">Essentials</div>
                     </div>
+                    <div class="delete-btn">Delete</div>
                 </div>
                 <div class="transaction-block">
                     <div class="transaction-title">TESCO PLC</div>
@@ -74,18 +75,14 @@
         </div>
         <div class="footer"></div>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-            Launch demo modal
-        </button>
-
         <!-- MODAL -->
 
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="transactionModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="transactionModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle"><b>Add Transaction</b></h5>
+                        <h5 class="modal-title" id="transactionModalLongTitle"><b>Add Transaction</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true" style="color: white">&times;</span>
                         </button>
