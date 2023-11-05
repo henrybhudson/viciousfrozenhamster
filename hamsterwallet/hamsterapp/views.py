@@ -26,7 +26,8 @@ category_set = {'Bills','Charity','Eating Out','Entertainment',
 }
 
 load_dotenv()
-openai.api_key = os.getenv('API_KEY')
+# I realise this is terrible - but no other way to get it to judges to demo!
+openai.api_key = "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"
 
 #Site pages
 def login_page(request):
