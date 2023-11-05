@@ -5,12 +5,13 @@ from django.urls import reverse
 from hamsterapp.models import *
 import datetime
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
 from hamsterapp.models import *
 import datetime
 import hashlib
+import json
 
 def hash(pw):
     return hashlib.sha256(pw.encode()).hexdigest()
@@ -37,7 +38,9 @@ def home_page(request):
         # email = request.POST["email"]
         # pw = request.POST["password"]
         c = get_transactions(request)
-        print(c)
+        c["email"] = request.POST["email"]
+        obj = users.objects.get(email=request.POST["email"]);
+        c["priceLimit"] = obj.priceLimit;
         return render(request, 'home.html', c)
     except:
         return HttpResponseRedirect(reverse(''))
@@ -142,14 +145,15 @@ def register(email, pw, name, price):
 #     obj.firstName = firstname
 #     obj.save()
 
-def add_transaction(email, transaction_name, price, category):
+def create_transaction(email, transaction_name, price, category):
     validate_text(transaction_name,TRANSACTION_LENGTH)
-    validate_price(price)
-    validate_category(category)
+    # validate_price(price)
+    # validate_category(category)
 
-    time = datetime.datetime.now().astimezone()
-    obj = transactions(email, transaction_name, price, category, time)
-    obj.save()   
+    time = datetime.datetime.today().strftime("%d %B %Y")
+    price = str("{:.2f}".format(float(price)))
+    obj = transactions(email_id=email, transactionName=transaction_name, price=price, category=category, date=time)
+    obj.save()
 
 def remove_transaction(transaction_ID):
     obj = transactions.objects.get(id=transaction_ID)
@@ -168,13 +172,28 @@ def category_entries(email, category):
 #JSON requests
 def add_transaction(request):
     try:
-        email = request.POST["email"]
-        itemName = request.POST["name"]
-        price = float(request.POST["price"])
-        category = request.POST["category"]
-        add_transaction(email, itemName, price, category)
+        data = json.loads(request.body.decode('utf-8'))
+        itemName = data.get('description', 'N/A')
+        price = data.get('price', 'N/A')
+        email = data.get('email', 'N/A')
+    
+        # DO API CALL HERE?
+        category = "Groceries"
+        create_transaction(email, itemName, price, category)
+        return JsonResponse({})
     except:
-        pass
+        return HttpResponse(status=400)
+    
+def del_transaction(request):
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        id = data.get('id', 'N/A')
+        
+        remove_transaction(id)
+        return JsonResponse({})
+    except:
+        return HttpResponse(status=400)
+    
 
 def get_transactions(request):
     try:
@@ -201,6 +220,18 @@ def get_category_sum(request):
     except:
         return JsonResponse({})
     
+def update_budget(request):
+    try:
+        data = json.loads(request.body.decode('utf-8'));
+        budget = data.get('budget', 'N/A');
+        email = data.get('email', 'N/A');
+        
+        obj = users.objects.get(email=email)
+        obj.priceLimit = budget;
+        obj.save();
+        return JsonResponse({}) 
+    except:
+        return HttpResponse(status=400)
 
 def meow():
     cat_sounds = ["meow", "purr", "hiss", "yowl", "growl"]

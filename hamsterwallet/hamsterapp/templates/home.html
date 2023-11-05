@@ -16,29 +16,30 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 </head>
 <body>
     <div class="slidecontainer">
-        <input type="range" min="20" max="500" value="50" class="slider" id="myRange">
-        <p>Budget: <span id="demo"></span></p>
+        <input type="range" min="20" max="500" value={{priceLimit}} class="slider" id="range">
+        <p>Budget: <span id="budget-value"></span></p>
     </div>
 
     <script>
-        var slider = document.getElementById("myRange");
-        var output = document.getElementById("demo");
-        output.innerHTML = "£"+slider.value; // Display the default slider value
+        var slider = document.getElementById("range");
+        var output = document.getElementById("budget-value");
+        output.innerHTML = "£" + slider.value; // Display the default slider value
 
         // Update the current slider value (each time you drag the slider handle)
         slider.oninput = function() {
-        output.innerHTML = "£"+this.value;
+            output.innerHTML = "£" + this.value;
         }
     </script>
     <div class="circle-section">
         <div class="inner-circle-section">
             <div class="inner-circle-subtext">You've Spent</div>
             <div class="inner-circle-value">£<span class="spend">370.54</span></div>
-            <div class="inner-circle-subtext">of £<span class="budget">500</span></div>
+            <div class="inner-circle-subtext">of £<span class="budget">{{priceLimit}}</span></div>
         </div>
 
         <div class="inner-circle-section" style="margin-left: calc((100% - 300px) / 2); width: 300px">
@@ -69,21 +70,28 @@
                             <span aria-hidden="true" style="color: white">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="input-label">Transaction Title</div>
-                        <input type="text" placeholder="E.g. 'Tesco'" name="description" id="description">
-                        <br /><br />
-                        <div class="input-label">Cost of Transaction</div>
-                        <div class="cost-input-container">
-                            <div class="currency-icon">£</div>
-                            <input class="cost-input" type="text" placeholder="0.00" name="description"
-                                id="description">
+                    <form id="transaction-form">
+                        {% comment %} action="../transaction/" method="post"  {% endcomment %}
+                        <div class="modal-body">
+                            
+                                {% csrf_token %}
+                                <input type="text" style="display: none" name="email" id="email" value={{email}}>
+                                <div class="input-label">Transaction Title</div>
+                                <input style="margin-top: 0;" type="text" placeholder="E.g. 'Tesco'" name="description" id="description">
+                                <br /><br />
+                                <div class="input-label">Cost of Transaction</div>
+                                <div class="cost-input-container">
+                                    <div class="currency-icon">£</div>
+                                    <input class="cost-input" type="text" placeholder="0.00" name="price"
+                                        id="price">
+                                </div>
+                            
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -115,6 +123,7 @@
     ts = ts.replaceAll('&#x27;', '"')
     const t_data = JSON.parse(ts).reverse();
     let total_spend = 0;
+    let current_budget = parseFloat('{{priceLimit}}');
 
     const TRANSACTIONS_LIST = document.querySelector('.transactions');
     const SPEND = document.querySelector('.spend');
@@ -128,7 +137,7 @@
         <div class="transaction-labels">
             <div class="first-label label">${t["category"]}</div>
         </div>
-        <div class="delete-btn">Delete</div>
+        <div class="delete-btn" onclick="delete_transaction(${t["id"]})">Delete</div>
         `;
         block.innerHTML = inner_html;
         TRANSACTIONS_LIST.appendChild(block);
@@ -138,6 +147,21 @@
     
     SPEND.textContent = `${total_spend.toFixed(2)}`;
 
+    {% comment %} function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    } {% endcomment %}
 
     // Create the chart
     const COLOURS = {
@@ -158,7 +182,7 @@
     const CATEGORIES = ["Bills", "Charity", "Food", "Entertainment", "Finances", "General", "Groceries", "Holidays", "Personal Care", "Shopping", "Bank Transfers", "Transport"];
 
 
-    const createData = (transactions) => {
+    const createData = (transactions, available) => {
         let values = {};
         let res = [];
         CATEGORIES.forEach((category) => {
@@ -173,19 +197,59 @@
             res.push([category, value]);
         }
 
+        if(available != 0) {
+            res.push(["Available", available])
+        }
+
         return res;
     };
 
-    const getRequiredColours = (transactions) => {
+    const getRequiredColours = (transactions, available) => {
         let cols = [];
-        transactions.forEach((transaction) => {
-            values[transaction["category"]] += parseFloat(transaction["price"]);
+        CATEGORIES.forEach((category) => {
+            added = false;
+            transactions.forEach((transaction) => {
+                let colour = COLOURS[category];
+                if(!cols.includes(colour)) {
+                    cols.push(colour)
+                    added = true;
+                }
+            });
+            if(!added) {
+                cols.push("")
+            }
         });
+
+        if(available != 0){
+            cols.push('#888888');
+        }
+
+        return cols;
     }
 
-    const f = () => {
-        const CIRCLE_SIZE = (window.innerWidth < 500) ? "120%" : "100%";
+    {% comment %} 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 {% endcomment %}
 
+    const generateCircle = () => {
+        let available = (current_budget - total_spend);
+
+        if(available < 0){
+            // do something
+            available = 0;
+        } 
+
+        let circle_data = createData(t_data, available);
+        let circle_colours = getRequiredColours(t_data, available);
+
+        setupChart(circle_data, circle_colours);
+    }
+
+    const setupChart = (data, colours) => {
+        const CIRCLE_SIZE = (window.innerWidth < 500) ? "120%" : "100%";
+        console.log(CIRCLE_SIZE)
+        
+        Highcharts.setOptions({
+            colors: colours
+        });
         Highcharts.chart('container', {
             chart: {
                 renderTo: 'container',
@@ -194,23 +258,19 @@
             },
             plotOptions: {
                 pie: {
-                    shadow: false,
                     borderWidth: 15,
-                    borderColor: '#2b2a33',
-                    colors: [
-                        getRequiredColours(t_data)
-                    ],
+                    borderColor: '#2b2a33'
                 },
                 
             },
             tooltip: {
                 formatter: function () {
-                    return '<b>' + this.point.name + '</b>: ' + '£' + this.y;
+                    return '<b>' + this.point.name + '</b>: ' + `£${this.y.toFixed(2)}`;
                 }
             },
             series: [{
                 name: 'Expenses',
-                data: createData(t_data),
+                data: data,
                 size: CIRCLE_SIZE,
                 innerSize: '80%',
                 dataLabels: {
@@ -224,21 +284,118 @@
                 text: ""
             }
         });
+        const CIRCLE = document.querySelector('.highcharts-root');
+        CIRCLE.style.width = `${window.innerWidth}px`;
+        CIRCLE.setAttribute('viewBox', `0 0 ${Math.max(600, window.innerWidth)} 400`);
     }
 
+    generateCircle();
 
-    f();
+    const getCookie = (name) => {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.getElementById("transaction-form").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission behavior;
+        
+        fetch('/../transaction/', {
+            method: 'POST',
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Accept": "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                description: document.querySelector('#description').value,
+                price: document.querySelector('#price').value,
+                email: document.querySelector('#email').value,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    const delete_transaction = (id) => {
+        fetch('/../del-transaction/', {
+            method: 'POST',
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Accept": "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    document.querySelector('#range').addEventListener('touchend', () => {
+        new_budget = document.querySelector('#range').value;
+        document.querySelector('.budget').textContent = new_budget;
+        current_budget = new_budget;
+
+        generateCircle();
+
+        fetch('/../update-budget/', {
+            method: 'POST',
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Accept": "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                budget: new_budget,
+                email: '{{email}}'
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Do stuff here
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    })
 </script>
+ 
+{% comment %} 
 
+Red alert when spent > budget
+Navbar fix
+Empty message when no transactions
+Add 'weekly' wording
+
+{% endcomment %}
 
 
 <script src="../static/chart.js"></script>
-
-<script>
-    const CIRCLE = document.querySelector('.highcharts-root');
-    CIRCLE.style.width = `${window.innerWidth}px`;
-    CIRCLE.setAttribute('viewBox', `0 0 ${Math.max(600, window.innerWidth)} 400`);
-</script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
     integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
