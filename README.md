@@ -14,3 +14,5 @@ If we were to continue with this, we would like the user to link their bank tran
 Use the demo account `demo@durhack.com` with password `demo` or create your own.
 
 To run the code, navigate to `hamsterwallet/` and run `python manage.py runserver`. You may need Django, OpenAI and Python downloaded.
+
+**Please contact us if you require one of our devices to run the code**.
