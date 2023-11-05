@@ -8,7 +8,7 @@ The app also features a login and registration system which communicates with a 
 
 If we were to continue with this, we would like the user to link their bank transactions and automatically categorise these transactions so that the user wouldn't have to enter these manually.
 
-## Usage
+## Usage (Please Read)
 > :warning: **Please use a mobile browser. This is only intended for mobile use** You can also use the responsive mode in developer tools on desktop.
 
 Use the demo account `demo@durhack.com` with password `demodurhack` or create your own.
@@ -16,3 +16,5 @@ Use the demo account `demo@durhack.com` with password `demodurhack` or create yo
 To run the code, navigate to `hamsterwallet/` and run `python manage.py runserver`. You may need Django, OpenAI and Python downloaded.
 
 **Please contact us if you require one of our devices to run the code**.
+
+There is also a chance OpenAI has deleted our API Key. We will try to keep an eye on this and update as necessary.
