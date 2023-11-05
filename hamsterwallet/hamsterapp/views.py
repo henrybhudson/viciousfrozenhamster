@@ -19,15 +19,15 @@ import openai
 def hash(pw):
     return hashlib.sha256(pw.encode()).hexdigest()
 
+print(hash('demodurhack'))
 
 category_set = {'Bills','Charity','Eating Out','Entertainment',
                       'Finances','Gegneral','Groceries','Holidays',
                       'Personal Care','Shopping','Transfers','Transport'
 }
 
-load_dotenv()
-# I realise this is terrible - but no other way to get it to judges to demo!
-openai.api_key = "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"
+load_dotenv();
+openai.api_key = os.getenv('API_KEY');
 
 #Site pages
 def login_page(request):
