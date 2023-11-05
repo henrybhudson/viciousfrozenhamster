@@ -17,4 +17,4 @@ To run the code, navigate to `hamsterwallet/` and run `python manage.py runserve
 
 **Please contact us if you require one of our devices to run the code**.
 
-There is also a chance OpenAI has deleted our API Key. We will try to keep an eye on this and update as necessary.
+We weren't sure how to hide the API Key for OpenAI. Please let us know if you can't add transactions (this'll be due to the key).
