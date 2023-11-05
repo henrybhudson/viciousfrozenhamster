@@ -113,22 +113,23 @@ def register(email, pw, name, price):
     if price < 0:
         raise Exception
 
-    obj = users(email=email,password=hash(pw), firstName=name, priceLimit=price)
+    obj = users(email=email,password=hash(pw), firstName=name)
     obj.save()
-def change_category_price(category, email, price):
-    validate_category(category)
-    validate_price(price)
-    price_sum = users.objects.get(email=email).priceLimit
-    for c,_,p in categories.objects.filter(email=email):
-        if c != category:
-            price_sum -= p
 
-    if price_sum - price < 0 or price < 0:
-        raise Exception
+# def change_category_price(category, email, price):
+#     validate_category(category)
+#     validate_price(price)
+#     price_sum = users.objects.get(email=email).priceLimit
+#     for c,_,p in categories.objects.filter(email=email):
+#         if c != category:
+#             price_sum -= p
+
+#     if price_sum - price < 0 or price < 0:
+#         raise Exception
     
-    obj = categories.objects.get(category=category, email=email)
-    obj.priceLimit = price
-    obj.save()
+#     obj = categories.objects.get(category=category, email=email)
+#     obj.priceLimit = price
+#     obj.save()
 
 # def update_details(email, password, firstname, price):
 #     obj = users.objects.get(email=email)
@@ -158,7 +159,6 @@ def sum_category(email, category):
     s = 0
     for i in transactions.objects.filter(email=email,category=category):
         s += i.price
-    return [s,categories.objects.get(email=email,category=category).priceLimit]
 def category_entries(email, category):
     return [i.values() for i in transactions.objects.filter(email=email,category=category)]
 
@@ -208,7 +208,6 @@ def get_transactions(request):
         data = {}
         return JsonResponse(data)
 
-import random
 import random
 def meow():
     cat_sounds = ["meow", "purr", "hiss", "yowl", "growl"]
