@@ -12,6 +12,9 @@ from hamsterapp.models import *
 import datetime
 import hashlib
 import json
+import os
+from dotenv import load_dotenv
+import openai
 
 def hash(pw):
     return hashlib.sha256(pw.encode()).hexdigest()
@@ -22,6 +25,8 @@ category_set = {'Bills','Charity','Eating Out','Entertainment',
                       'Personal Care','Shopping','Transfers','Transport'
 }
 
+load_dotenv()
+openai.api_key = os.getenv('API_KEY')
 
 #Site pages
 def login_page(request):
@@ -145,10 +150,13 @@ def register(email, pw, name, price):
 #     obj.firstName = firstname
 #     obj.save()
 
-def create_transaction(email, transaction_name, price, category):
+def create_transaction(email, transaction_name, price):
     validate_text(transaction_name,TRANSACTION_LENGTH)
     # validate_price(price)
     # validate_category(category)
+    
+    chat_completion = openai.ChatCompletion.create(model="gpt-4", messages=[{"role": "user", "content": f"Categorise the payment described '{transaction_name}' using one of the following categories. Just say the word.\nBills\nCharity\nFood\nEntertainment\nFinances\nGeneral\nGroceries\nHolidays\nPersonal Care\nShopping\nBank Transfers\nTransport"}]).choices[0].message.content;
+    category = chat_completion.replace('.', '');
 
     time = datetime.datetime.today().strftime("%d %B %Y")
     price = str("{:.2f}".format(float(price)))
@@ -177,9 +185,7 @@ def add_transaction(request):
         price = data.get('price', 'N/A')
         email = data.get('email', 'N/A')
     
-        # DO API CALL HERE?
-        category = "Groceries"
-        create_transaction(email, itemName, price, category)
+        create_transaction(email, itemName, price)
         return JsonResponse({})
     except:
         return HttpResponse(status=400)

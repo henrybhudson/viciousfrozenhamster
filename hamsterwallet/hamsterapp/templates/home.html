@@ -118,7 +118,7 @@
         }
     });
 </script>
-<script>
+<script type="module">
     let ts = '{{ transactions }}';
     ts = ts.replaceAll('&#x27;', '"')
     const t_data = JSON.parse(ts).reverse();
@@ -207,7 +207,7 @@
     const getRequiredColours = (transactions, available) => {
         let cols = [];
         CATEGORIES.forEach((category) => {
-            added = false;
+            let added = false;
             transactions.forEach((transaction) => {
                 let colour = COLOURS[category];
                 if(!cols.includes(colour)) {
@@ -227,8 +227,6 @@
         return cols;
     }
 
-    {% comment %} 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 {% endcomment %}
-
     const generateCircle = () => {
         let available = (current_budget - total_spend);
 
@@ -245,7 +243,6 @@
 
     const setupChart = (data, colours) => {
         const CIRCLE_SIZE = (window.innerWidth < 500) ? "120%" : "100%";
-        console.log(CIRCLE_SIZE)
         
         Highcharts.setOptions({
             colors: colours
@@ -383,6 +380,7 @@
             console.error('Error:', error);
         });
     })
+
 </script>
  
 {% comment %} 
