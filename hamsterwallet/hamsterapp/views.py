@@ -27,7 +27,7 @@ category_set = {'Bills','Charity','Eating Out','Entertainment',
 
 load_dotenv()
 # I realise this is terrible - but no other way to get it to judges to demo!
-openai.api_key = "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"
+openai.api_key = "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"
 
 #Site pages
 def login_page(request):
@@ -152,6 +152,7 @@ def create_transaction(email, transaction_name, price):
     # validate_price(price)
     # validate_category(category)
     
+    
     chat_completion = openai.ChatCompletion.create(model="gpt-4", messages=[{"role": "user", "content": f"Categorise the payment described '{transaction_name}' using one of the following categories. Just say the word.\nBills\nCharity\nFood\nEntertainment\nFinances\nGeneral\nGroceries\nHolidays\nPersonal Care\nShopping\nBank Transfers\nTransport"}]).choices[0].message.content;
     category = chat_completion.replace('.', '');
 
@@ -181,7 +182,7 @@ def add_transaction(request):
         itemName = data.get('description', 'N/A')
         price = data.get('price', 'N/A')
         email = data.get('email', 'N/A')
-    
+
         create_transaction(email, itemName, price)
         return JsonResponse({})
     except:
